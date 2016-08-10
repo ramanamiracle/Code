@@ -1,0 +1,34 @@
+tail -f logs/OracleAq.log | grep -i "process"
+
+ps -eo pmem,pcpu,vsize,pid,cmd | sort -k 1 -nr | head -5
+
+cat OracleAq.log | egrep -i "2015-02-05 14:3[0-5]" | grep -i "events"
+
+cat OracleAq.log | grep -i -A3 -B3 "0e547d73d22c63f5e0540003ba5db573"
+
+cat OracleAq.log | awk -F: '/Delay/ { a[substr($14,1,index($14, ".")-1)]++ } END { for (var in a)print var "," a[var] }'
+
+cat  OracleAq.log | awk -F: '/Delay/ {if($14 ~ /^ 124\./) {print $0}}'
+
+cat OracleAq.log | egrep -i "Delay= 1[456]"
+
+cat OracleAq.log | awk -F: '/Delay/ { a[substr($14,1,index($14, ".")-1)]++ ; b[$2":"substr($3,0,1)]++; } END { for (var in a)print var "," a[var]; for (var in b)print var "," b[var] }'
+
+cat OracleAq.log | awk -F: '$2 ~ /2015-02-10 12/' | awk -F: '/Delay/ { a[substr($14,1,index($14, ".")-1)]++ ; b[$2":"substr($3,0,1)]++; } END { for (var in a)print var "," a[var]; for (var in b)print var "," b[var] }'
+
+cat OracleAq.log | awk -F: '/Delay/ { a[substr($14,1,index($14, ".")-1)]++ ; b[$2]++; } END { for (var in a)print var "," a[var]; for (var in b)print var "," b[var] }'
+
+cat OracleAq.log | gawk -F: '/Delay/ { a[$2,substr($14,1,index($14, ".")-1)]++;  } END { for (comb in a){ split(comb, idx, SUBSEP); print idx[1] "," idx[2] " = " a[idx[1], idx[2]] } } '
+
+cat OracleAq.log | egrep -i -E "2015-02-25 04:.*Delay" | gawk -F: '{ a[$2,substr($14,1,index($14, ".")-1)]++;  } END { for (comb in a){ split(comb, idx, SUBSEP); print idx[1] "," idx[2] " = " a[idx[1], idx[2]] } } '
+
+cat OracleAq.log | egrep -i -E "2015-02-11 0[0-9]:59:5.*Events"
+
+cat OracleAq.log | egrep -i -E "2015-02-11 11:.*Delay"
+
+cat  OracleAq.log | awk  '/DB Time/ { a[$18]++; } END { for (var in a)print var " = " a[var] }'
+cat  OracleAq.log | awk  '/Hazel Time/ { a[$17]++; } END { for (var in a)print var " = " a[var] }'
+cat  OracleAq.log | awk  '/Hazel Time/ { if( $17 ~ /2387/ ) print $0 ;}'
+
+cat  OracleAq.log | awk '/Delay/ { a[$26]++; } END { for (var in a)print var " = " a[var] }'
+cat OracleAq.log | awk '/Total Time/ { a[$17]++; } END {for (var in a)print var " = " a[var] }'
